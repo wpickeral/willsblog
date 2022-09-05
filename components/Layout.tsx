@@ -10,6 +10,7 @@ import Navbar from './Navbar';
 import SEO from './SEO/SEO';
 import {useRouter} from 'next/router';
 
+
 type MetaProps = {
   author: string,
   title: string,
