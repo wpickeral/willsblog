@@ -77,7 +77,7 @@ const Layout = ({
       script.src = 'https://giscus.app/client.js';
       script.async = true;
       script.setAttribute('data-repo', 'wpickeral/willsblog');
-      script.setAttribute('data-repo-id', 'R_kgDOHJ99fg');
+      script.setAttribute('data-repo-id', 'R_kgDOH8EpxQ');
       script.setAttribute('data-category', 'Announcements');
       script.setAttribute('data-category-id', 'DIC_kwDOHJ99fs4CRO2w');
       script.setAttribute('data-mapping', 'title');
