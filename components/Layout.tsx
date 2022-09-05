@@ -79,7 +79,7 @@ const Layout = ({
       script.setAttribute('data-repo', 'wpickeral/willsblog');
       script.setAttribute('data-repo-id', 'R_kgDOH8EpxQ');
       script.setAttribute('data-category', 'Announcements');
-      script.setAttribute('data-category-id', 'DIC_kwDOHJ99fs4CRO2w');
+      script.setAttribute('data-category-id', 'DIC_kwDOH8Epxc4CRO-0');
       script.setAttribute('data-mapping', 'pathname');
       script.setAttribute('data-strict', '0');
       script.setAttribute('data-reactions-enabled', '1');
@@ -87,7 +87,7 @@ const Layout = ({
       script.setAttribute('data-input-position', 'bottom');
       script.setAttribute('data-theme', 'preferred_color_scheme');
       script.setAttribute('data-lang', 'en');
-      script.setAttribute('crossOrigin', 'anonymous');
+      script.setAttribute('cross-origin', 'anonymous');
       head?.appendChild(script);
     }
     return () => {
