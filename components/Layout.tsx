@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx.min';
 import 'prismjs/components/prism-tsx.min';
+import 'prismjs/plugins/toolbar/prism-toolbar';
 import Footer from './Footer';
 import PostHeader from './PostHeader';
 import ArticleBreadcrumbs from './ArticleBreadcrumbs';
@@ -24,17 +25,43 @@ const Layout = ({
 }: { meta?: MetaProps, children: React.ReactNode }) => {
 
   /*
-    The function below will need to rend when ever the post component
+    The function below will need to run when ever the post component
     is rendered. This approach persists the syntax highlighting when
     dark mode is toggles or when the page is refreshed.
   */
+
   useEffect(() => {
-    if (meta) {
-      if (meta.codeSnippets) {
-        Prism.highlightAll();
-      }
+    if (meta?.codeSnippets) {
+      // Styled using tailwindcss in .styles.css
+      Prism.plugins.toolbar.registerButton('copy-code', {
+        className: 'copy-code',
+        text: 'Copy', // required
+        onClick: (env: { code: string; element: HTMLButtonElement }) => { // optional
+
+          navigator.clipboard.writeText(env.code).then(() => {
+            /* clipboard successfully set */
+            // Change the text of the button to "Copied"
+            const code = env.element;
+            const toolbar = code.closest('.code-toolbar') as HTMLDivElement;
+            let copyButton = toolbar?.querySelector(
+                '.copy-code') as HTMLButtonElement;
+
+            copyButton.textContent = 'Copied!';
+
+            // Change the text back to "Copy" after 2 seconds
+            setTimeout(() => {
+              copyButton.textContent = 'Copy';
+            }, 2000);
+
+          }, () => {
+            /* clipboard write failed */
+            console.log('Clipboard write failed');
+          });
+        },
+      });
+      Prism.highlightAll();
     }
-  });
+  }, [meta]);
 
   // Set the theme based on the user's preference on page load.
   useEffect(() => {
