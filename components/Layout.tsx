@@ -43,7 +43,6 @@ const Layout = ({
             // Change the text of the button to "Copied"
             const code = env.element;
             const toolbar = code.closest('.code-toolbar') as HTMLDivElement;
-            console.log(toolbar);
             let copyButton = toolbar?.querySelector(
                 '.copy-code') as HTMLButtonElement;
 
