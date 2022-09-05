@@ -1,0 +1,299 @@
+import Layout from '../../components/Layout'
+import DemoContactForm from '../../components/BlogWidgets/DemoContactForm'
+
+export const meta = {
+  author: 'Will Pickeral',
+  title: 'Building a contact form with Next.js and Nodemailer',
+  date: 'March 7, 2022',
+  description: "This article will show you how I built a contact form using Next.js and Nodemailer.",
+  welcomeImageUrl: '/pexels-pixabay-356043.jpg',
+  welcomeImageAltText: 'A person using a laptop',
+  codeSnippets: true,
+}
+
+## Introduction
+There are many packages available to help you implement email functionality on your website or app.
+I used the popular [nodemailer](https://nodemailer.com/about/) library, and it paired really nicely with Next.js api
+routes.
+
+I will start by describing the contact form component. Next, I will discuss how I implemented the API endpoint to handle the
+email requests. Finally, I will close by integrating the form with the endpoint.
+
+To get the most out of this article, you should be familiar with Javascript, React, and Next.js. Let's get start by
+reviewing the contact form component below.
+
+```tsx
+import useContactForm from '../hooks/useContactForm';
+
+const ContactForm = () => {
+
+  const {values, handleChange} = useContactForm();
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+  }
+
+  return (
+      <form onSubmit={handleSubmit}>
+          <label htmlFor='email'>Email</label>
+          <input
+              required
+              id='email'
+              value={values.email}
+              onChange={handleChange}
+              type='email'
+          />
+
+          <label htmlFor='subject'>Subject</label>
+          <input
+              required
+              id='subject'
+              value={values.subject}
+              onChange={handleChange}
+              type='text'
+          />
+          <label htmlFor='message'>Message</label>
+          <textarea
+              required
+              value={values.message}
+              onChange={handleChange}
+              id='message'
+              rows={8}
+          />
+        <button type='submit' value='Submit'>Send</button>
+      </form>
+  );
+};
+
+export default ContactForm;
+```
+
+## The form component
+The form component is relatively straightforward, but let's break down what's going on here.
+
+First, we import a custom hook called ```useContactForm``` (more on that later). Then, we destructure ```values``` and
+```handleChange```. The ```values``` object represents the current state of the form inputs and has the following
+properties and initial state.
+
+```tsx
+const values = {
+    email: '',
+    subject: '',
+    message: '',
+}
+```
+
+We also get a function called ```handleChange```, which will handle the form ```onChange``` events.
+
+Working our way down in the function body, we have a ```handleSubmit``` function to handle the form ```onSubmit``` events.
+Currently, the only thing it does is prevent the default form submission behavior. We will add more logic to handle the
+form data later. For now, let's take a closer look at our ```useContactForm``` custom hook.
+
+```tsx
+import {useState} from 'react';
+
+const useContactForm = () => {
+  const [values, setValues] = useState({
+    email: '',
+    subject: '',
+    message: '',
+  });
+
+  const handleChange = (e) => {
+    setValues(prevState => {
+      return {
+        ...prevState,
+        [e.target.id]: e.target.value,
+      };
+    });
+  };
+
+  return {values, handleChange};
+};
+
+export default useContactForm;
+```
+
+As mentioned earlier, the initial state of the values object contains properties defined by the id defined on the form
+input, each with an initial value of an empty string.
+
+The handleChange function updates the state by including all the elements from the current state using
+[spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+Finally, we use ```e.target.id``` to update the target element's state dynamically. Check out the demo form below to update
+the state using the ```useContactForm``` hook.
+
+<DemoContactForm/>
+
+There are certainly other ways to keep state for a form. The most common alternative that comes to mind is using
+one ```useState``` hook for each form input. the useContact form allows us to accomplish the same goal with using way
+less code.
+
+Before moving on to the API, I created a function using [axios](https://axios-http.com/docs/intro), that we will use to
+send requests to the API.
+
+```tsx
+import axios from 'axios';
+
+const sendEmail = async (email, subject, message) => {
+  return axios({
+    method: 'post',
+    url: '/api/send-mail',
+    data: {
+      email: email,
+      subject: subject,
+      message: message,
+    },
+  });
+};
+
+export default sendEmail;
+```
+
+We will come back to this when we wire up the form with the API.
+
+## The API
+I created the API endpoint with the built-in Next.js [Api Routes](https://nextjs.org/docs/api-routes/introduction). I started with creating the following directory
+in my Next.js project.
+
+```url
+/blog/pages/api
+```
+
+I named the endpoint ```send-mail.js```. So the url for the endpoint will be:
+
+```url
+http://localhost:3000/api/send-mail
+```
+
+Let's add some code to our endpoint.
+
+```tsx
+const nodemailer = require('nodemailer');
+
+export default function handler(req, res) {
+
+  const message = {
+    from: req.body.email,
+    to: process.env.GMAIL_EMAIL_ADDRESS,
+    subject: req.body.subject,
+    text: req.body.message,
+    html: `<p>${req.body.message}</p>`,
+  };
+
+  let transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: process.env.GMAIL_EMAIL_ADDRESS,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+
+  if (req.method === 'POST') {
+    transporter.sendMail(message, (err, info) => {
+
+      if (err) {
+        res.status(404).json({
+            error: `Connection refused at ${err.address}`
+        });
+      } else {
+        res.status(250).json({
+            success: `Message delivered to ${info.accepted}`
+        });
+      }
+    });
+  }
+}
+```
+
+Ok, there is a lot going on here. First included the ```nodemailer``` library. Next we have the function ```handler```, which
+is the request handler, with the req and res parameters. Check out the [API Routes]() docs if you are not familiar
+with the req and res objects.
+
+Next, we create the nodemailer [message configuration](https://nodemailer.com/message/) object. I used Gmail as my
+provider, but there a few caveats which are discussed here ([using Gmail](https://nodemailer.com/usage/using-gmail/)).
+The excellent news is nodemailer supports many alternatives. The [nodemailer docs](https://nodemailer.com/about/) are
+fantastic. I encourage you to review the docs if you are unfamiliar with the library.
+
+We create the transporter object to send the mail data. The transporter function accepts the message data and an
+optional callback. The callback gives us access to the ```error``` and ```info``` objects which I use to handle the
+response.
+
+That's it for the API. Now, let's wire up the contact form.
+
+## Connecting the form to the api
+
+
+Let's add the rest of the code to our ```handleSubmit``` function.
+
+```tsx
+import useContactForm from '../hooks/useContactForm';
+import sendEmail from '../lib/sendEmail';
+import {useState} from 'react';
+
+const ContactForm = () => {
+
+  const {values, handleChange} = useContactForm();
+  const [responseMessage, setResponseMessage] = useState(
+      {isSuccessful: false, message: ''});
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const req = await sendEmail(values.email, values.subject, values.message);
+      if (req.status === 250) {
+        setResponseMessage(
+            {isSuccessful: true, message: 'Thank you for your message.'});
+      }
+    } catch (e) {
+      console.log(e);
+      setResponseMessage({
+        isSuccessful: false,
+        message: 'Oops something went wrong. Please try again.',
+      });
+    }
+  };
+
+  return (
+      <form onSubmit={handleSubmit}>
+          <label htmlFor='email'>Email</label>
+          <input
+              required
+              id='email'
+              value={values.email}
+              onChange={handleChange}
+              type='email'
+          />
+
+          <label htmlFor='subject'>Subject</label>
+          <input
+              required
+              id='subject'
+              value={values.subject}
+              onChange={handleChange}
+              type='text'
+          />
+          <label htmlFor='message'>Message</label>
+          <textarea
+              required
+              value={values.message}
+              onChange={handleChange}
+              id='message'
+              rows={8}
+          />
+        <button type='submit' value='Submit'>Send</button>
+      </form>
+  );
+};
+
+export default ContactForm;
+```
+
+The handle submit function is converted to an
+async function. We use the ```sendEmail``` function we created to await the response from the new API endpoint.
+The response is saved as local state to ```responseMessage```.
+
+## Conclusion
+Now that we have the response set in local state, we can use that information to update the UI. Usually this includes
+displaying alert to the user with the status of the message.
+
+export default ({ children }) => <Layout meta={meta}>{children}</Layout>;

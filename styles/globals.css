@@ -1,0 +1,29 @@
+@import url('./prism-material-oceanic.css');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Open+Sans:wght@300;400;500;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#__next {
+    height: 100vh;
+}
+
+#mdx h2 {
+    @apply font-bold text-4xl text-gray-600 dark:text-gray-100 mb-1
+}
+
+#mdx p {
+    @apply text-gray-600 font-normal text-lg dark:text-gray-100 mb-4;
+}
+
+#mdx pre {
+    @apply mt-6 mb-6 !important;
+    @apply rounded;
+    @apply shadow;
+}
+
+#mdx p a {
+    @apply text-blue-600 dark:text-blue-500 hover:underline;
+}

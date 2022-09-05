@@ -1,0 +1,43 @@
+import Layout from '../components/Layout'
+import Breadcrumbs from '../components/Breadcrumbs'
+import Heading from '../components/Heading'
+import { pages } from '../lib/lists'
+
+<p>
+  My first programming introduction was during a Data Analytics lecture in grad school. As the professor briefly
+  discussed the python programming language and the benefits of using a programming language to solve a problem
+  real-world problem, I did a quick google search. I was hooked.
+</p>
+<p>
+  Computers don't care how old you are, how smart you are, your skin color, socioeconomic background, gender, or if you
+  went to college or not. The only requirement is to communicate with the computer using a language that it understands.
+  For me, that language is usually Javascript. More specifically, I am passionate about building web applications with
+  React and Next.js.
+</p>
+<p>
+  I hope my articles inspire you to share your knowledge and experiences. There is always someone banging their head
+  against the wall to solve a problem you solved yesterday. I would not be writing this blog if it were not for the vast
+  amount of free content online that I used to learn how to code. I am happy to finally contribute to the community with
+  my lessons learned.
+</p>
+<p>
+  As for non-tech talk, I live in Columbus, Ohio, with my beautiful wife and two children. I work as a Project Manager
+  at a healthcare software company. I am also the owner of William Belle LLC, a software development company.
+</p>
+<p>
+  That's it for now. Enjoy the blog, and take care. - Will
+</p>
+
+export default ({ children }) => {
+  return (
+    <Layout>
+      <Breadcrumbs pages={pages}/>
+      <div className="flex">
+        <Heading>About me</Heading>
+      </div>
+      <div id="mdx" className="flex-grow">
+        {children}
+      </div>
+    </Layout>
+  );
+};
