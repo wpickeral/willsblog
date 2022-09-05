@@ -10,6 +10,10 @@ const pages = [
     path: '/articles',
   },
   {
+    name: 'GitHub',
+    path: 'https://github.com/wpickeral',
+  },
+  {
     name: 'Contact',
     path: '/contact',
   },
