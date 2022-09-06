@@ -26,14 +26,7 @@ const ArticlesList = ({posts}: { posts: Array<ArticlesListProps> }) => {
                   >
                     <div className='md:flex gap-8'>
                       <div className='md:mb-0 mb-6'>
-                        <Image
-                            className='inline-block h-52 w-52 rounded'
-                            src={post.welcomeImageUrl}
-                            width='300'
-                            height='300'
-                            alt={post.welcomeImageAltText}
-                            objectFit='cover'
-                        />
+                       <Image alt={post.welcomeImageAltText} src={post.welcomeImageUrl} width='752' height='470' layout='intrinsic' />
                       </div>
                       <div>
                         <Link href={`/articles/${post.slug}`}>
