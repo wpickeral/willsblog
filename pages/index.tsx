@@ -6,13 +6,12 @@ import Layout from '../components/Layout';
 import Image from 'next/image';
 
 const Home: NextPage = () => {
-
   return (
       <Layout>
         <div
             className='sm:mt-14 flex flex-col text-gray-600 border-b-[2px] border-b-black/[.06] dark:border-b-white/[.03] pb-10 dark:text-gray-100 mb-10'>
 
-          <div className='flex items-center pt-20'>
+          <div className='flex items-center mt-12 mb-3'>
             <Image src='/will-avatar.jpeg'
                    height={150}
                    width={150}

@@ -13,7 +13,6 @@ const PostHeader = ({
   return (
       <div
           className='border-solid border-b-gray-[200] dark:border-b-gray border-b-1.5 mb-6'>
-        <WelcomeImage src={welcomeImageUrl} alt={welcomeImageAltText}/>
         <Heading>{title}</Heading>
         <div className='flex mb-12 items-center'>
           <Image
@@ -29,6 +28,7 @@ const PostHeader = ({
             <PublishDate date={date} className='mt-1.5'/>
           </div>
         </div>
+        <WelcomeImage src={welcomeImageUrl} alt={welcomeImageAltText}/>
       </div>
   );
 };
