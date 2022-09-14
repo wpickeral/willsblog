@@ -129,7 +129,7 @@ const Layout = ({
         <SEO
             title={meta?.title
                 ? `${meta.title} - Will's Blog`
-                : 'willpickeral.dev'}
+                : "Will's Blog"}
             author={meta?.author}
             description={meta?.description}
         />
