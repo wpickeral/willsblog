@@ -33,14 +33,15 @@ function Breadcrumbs({
                             aria-current='page'
                         >{page.name} </span>
                     ) : (
-                        <Link href={page.href}>
-                          <a
-                              className='ml-4 text-sm text-gray-600 hover:text-gray-700 dark:hover:text-gray-100 dark:text-gray-400'
-                              aria-current={page.current ? 'page' : undefined}
-                          >
-                            {page.name}
-                          </a>
-                        </Link>)}
+                        page.href && (
+                            <Link href={page.href}>
+                              <a
+                                  className='ml-4 text-sm text-gray-600 hover:text-gray-700 dark:hover:text-gray-100 dark:text-gray-400'
+                                  aria-current={page.current ? 'page' : undefined}
+                              >
+                                {page.name}
+                              </a>
+                            </Link>))}
                   </div>
                 </li>
             ))}
